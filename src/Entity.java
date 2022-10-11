@@ -1,12 +1,20 @@
-/** 实体*/
-public interface Entity {
-    double getX();
-    void setX(double X);
+import static java.lang.Math.pow;
 
-    double getY();
-    void setY(double Y);
+public class Entity {
+    protected double x;
+    protected double y;
+    public Entity(){};
 
-    boolean isHit();
-    boolean circular(Entity e);
-    
+    public Entity(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    private boolean isHit = config.isHit;
+    public boolean isHit(){
+        return isHit;
+    }
+
+    public boolean circular(Entity e){
+        return pow(this.x - e.x, 2) + pow(this.y - e.y, 2) <= config.range * config.range;
+    }
 }

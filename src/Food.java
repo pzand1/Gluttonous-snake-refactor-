@@ -1,5 +1,3 @@
-public interface Food extends Entity{
-
-    void createFood();
+public class Food extends Entity{
 
 }
