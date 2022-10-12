@@ -3,12 +3,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class control {
+    public static int n = 0;
     public static void ThreadTest(LinkedList<Snake> snakes) {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 if (StdDraw.hasNextKeyTyped()) {
+                    n++;
                     char key = StdDraw.nextKeyTyped();
                     if (key == 'a' && snakes.getFirst().hasdAgree <= config.MaxAngle) {
                         snakes.getFirst().hasdAgree += config.dAngle;

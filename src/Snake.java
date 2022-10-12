@@ -17,18 +17,18 @@ public class Snake extends Entity {
         }
     }
 
-    protected void eatFood(Food[] f) {
-        for (Food food:f) {
+    protected void eatFood(LinkedList<Snake> snakes, LinkedList<Food> foods) {
+        for (Food food : foods) {
             if(body.getLast().circular(food)){
-                food.takefood(this);
+                food.takefood(this, snakes);
             }
         }
     }
+
     public LinkedList<Entity> getBody(){
         return body;
     }
     private void setAngle(){
-        System.out.println(this.hasdAgree);
         this.angle = this.angle + this.hasdAgree;
         this.hasdAgree = 0;
     }
@@ -58,6 +58,7 @@ public class Snake extends Entity {
 
     public void draw(){
         for(Entity e : getBody()){
+            StdDraw.setPenColor(config.color_Snake);
             StdDraw.filledCircle(e.x, e.y, this.radius);
         }
     }

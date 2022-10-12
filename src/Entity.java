@@ -15,8 +15,8 @@ public class Entity {
     public boolean isHit(){
         return isHit;
     }
-
+    //判断重叠 true
     public boolean circular(Entity e){
-        return pow(this.x - e.x, 2) + pow(this.y - e.y, 2) <= pow(this.radius + e.radius, 2);
+        return Math.sqrt(pow(this.x - e.x, 2) + pow(this.y - e.y, 2)) <= this.radius + e.radius;
     }
 }

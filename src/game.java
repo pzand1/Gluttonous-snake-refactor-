@@ -1,9 +1,9 @@
 import java.util.LinkedList;
 
 public class game {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         LinkedList<Snake> snakess = new LinkedList<>();
-        snakess.add(new Snake(0, 0,"???"));
+        snakess.add(new Snake(0, 0, "???"));
 
         LinkedList<Food> foods = new LinkedList<>();
         foods.add(new Food());
@@ -18,19 +18,25 @@ public class game {
         StdDraw.show();
 
         control.ThreadTest(snakess);
+
 //        while (!snakes.isdead(snakess)) {
         while (true) {
             StdDraw.clear();
             for (Snake s : snakess) {
                 s.draw();
                 s.move();
+                s.eatFood(snakess, foods);
+            }
+
+            for (Food f : foods) {
+                f.draw();
             }
 
             StdDraw.show();
-//            StdDraw.pause(config.dT);
-            StdDraw.pause(100);
-
+            StdDraw.pause(config.dT);
         }
+
+
 
     }
 }
