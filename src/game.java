@@ -7,6 +7,7 @@ public class game {
 
         LinkedList<Food> foods = new LinkedList<>();
         foods.add(new Food());
+        foods.add(new bigFood());
 
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(config.canvasWidth, config.canvasHeight);
