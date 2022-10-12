@@ -1,16 +1,36 @@
+import java.util.LinkedList;
+
 public class game {
     public static void main(String[] args) {
-        Snake s = new Snake(0, 0);
+        LinkedList<Snake> snakess = new LinkedList<>();
+        snakess.add(new Snake(0, 0,"???"));
+
+        LinkedList<Food> foods = new LinkedList<>();
+        foods.add(new Food());
+
         StdDraw.enableDoubleBuffering();
-        StdDraw.setScale(-100, 100);
-        StdDraw.clear();
-        s.draw();
+        StdDraw.setCanvasSize(config.canvasWidth, config.canvasHeight);
+        StdDraw.setXscale(-config.x_Size, config.x_Size);
+        StdDraw.setYscale(-config.y_Size, config.y_Size);
+
+        Snake snakes = snakess.getLast();
+        snakess.getLast().draw();
         StdDraw.show();
-        while(true){
+
+        control.ThreadTest(snakess);
+//        while (!snakes.isdead(snakess)) {
+        while (true) {
             StdDraw.clear();
-            s.draw();
-            s.move();
+            for (Snake s : snakess) {
+                s.draw();
+                s.move();
+            }
+
             StdDraw.show();
+//            StdDraw.pause(config.dT);
+            StdDraw.pause(100);
+
         }
+
     }
 }
