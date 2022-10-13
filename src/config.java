@@ -8,16 +8,14 @@ public final class config {
     //游戏时
     public static final int dT = 14;
     //默认初始速度
-    public static final double speed = 10;
+    public static final double speed = 5;
     //实体半径
     public static final int radius = 190;
     public static final int radiusFood = 100;
     //每帧转动最大幅度
-    public static final int MaxAngle = 30;
+    public static final int MaxAngle = 5;
     //每次改变的幅度
-    public static final int dAngle = 3;
-
-
+    public static final double dAngle = 1;
 
 
     public static final Color color_Snake = Color.BLACK;
