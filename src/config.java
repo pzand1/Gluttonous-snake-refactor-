@@ -6,16 +6,16 @@ public final class config {
     //地图y方向大小 * 2(正负方向和)
     public static final int y_Size = 10000;
     //游戏时
-    public static final int dT = 14;
+    public static final int dT = 10;
     //默认初始速度
     public static final double speed = 5;
     //实体半径
     public static final int radius = 190;
     public static final int radiusFood = 100;
     //每帧转动最大幅度
-    public static final int MaxAngle = 5;
+    public static final int MaxAngle = 10;
     //每次改变的幅度
-    public static final double dAngle = 1;
+    public static final double dAngle = 0.5;
 
 
     public static final Color color_Snake = Color.BLACK;

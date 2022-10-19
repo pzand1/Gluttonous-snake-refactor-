@@ -3,11 +3,11 @@ import java.util.LinkedList;
 public class Snake extends Entity {
 
     private LinkedList<Entity> body = new LinkedList<>();
-    protected int hasdAgree = 0;
+    protected double hasdAgree = 0;
 
     protected boolean ismove = true;
     protected double speed = config.speed;
-    protected int angle = 0;
+    protected double angle = 0;
 
     public Snake(double x, double y, String picture) {
         super(x, y);
