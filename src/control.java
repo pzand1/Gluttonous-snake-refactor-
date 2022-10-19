@@ -3,21 +3,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class control {
-    public static int n = 0;
-
+    //向指定方向转dAgree
+    private static void trun_To_SpeDir(Snake snake, char key, double dAngle){
+        if (key == 'l' && snake.hasdAgree <= config.MaxAngle) {
+            snake.hasdAgree += dAngle;
+        } else if (key == 'r' && snake.hasdAgree >= -config.MaxAngle) {
+            snake.hasdAgree -= dAngle;
+        }
+    }
+    //向指定坐标转dAgree
+    private static void trun_To_SpeCoor(Snake snake, double X, double Y){
+        Entity head = snake.getBody().getLast();
+        double degree_snake = degree(snake.angle);
+        double now_degree = degree(Math.toDegrees(Math.atan2(Y - head.y, X - head.x)));
+        trun_To_SpeDir(snake, Trun(now_degree, degree_snake));
+    }
     public static void ThreadTest(LinkedList<Snake> snakes) {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 if (StdDraw.hasNextKeyTyped()) {
-                    n++;
                     char key = StdDraw.nextKeyTyped();
-                    if (key == 'a' && snakes.getFirst().hasdAgree <= config.MaxAngle) {
-                        snakes.getFirst().hasdAgree += config.dAngle;
-
-                    } else if (key == 'd' && snakes.getFirst().hasdAgree >= -config.MaxAngle) {
-                        snakes.getFirst().hasdAgree -= config.dAngle;
+                    if(key == config.turnToLeft) {
+                        trun_To_SpeDir(snakes.getFirst(), 'l', config.dAngle_Key);
+                    }else if(key == config.turnToRight){
+                        trun_To_SpeDir(snakes.getFirst(), 'r', config.dAngle_Key);
                     }
                 }
             }
@@ -31,31 +42,19 @@ public class control {
             @Override
             public void run() {
                 Snake snake = snakes.getFirst();
-                Entity head = snake.getBody().getLast();
-                double degree_snake = degree(snake.angle);
                 double mouseX = StdDraw.mouseX();
                 double mouseY = StdDraw.mouseY();
-                double degree_mouse = degree(Math.toDegrees(Math.atan2(mouseY - head.y, mouseX - head.x)));
-                if(Trun(degree_mouse, degree_snake) == 'l' && !(snake.hasdAgree == config.MaxAngle)){
-                    snake.hasdAgree += config.dAngle;
-                }else if(Trun(degree_mouse, degree_snake) == 'r'&& !(snake.hasdAgree == -config.MaxAngle)){
-                    snake.hasdAgree -= config.dAngle;
-                }
-//                System.out.println(degree_mouse);
-//                System.out.println(degree_snake);
-//                System.out.println(Trun(degree_mouse, degree_snake));
-
+                trun_To_SpeCoor(snake, mouseX, mouseY);
             }
-
         };
         timer.scheduleAtFixedRate(timerTask, 0, 1);//0代表一开始就执行没有延迟
     }
 
-    public static double degree(double angle) {
+    private static double degree(double angle) {
         double a = angle % 360;
         return a < 0 ? a + 360 : a;
     }
-    public static char Trun(double mouse, double snake){
+    private static char Trun(double mouse, double snake){
         double sub = snake - mouse;
         if(Math.abs(sub) <= 0.05) return 'x';
         if(sub > 0){
@@ -67,5 +66,13 @@ public class control {
             else return 'l';
         }
         return 'x';
+    }
+
+    private static void trun_To_SpeDir(Snake snake, char key){
+        if (key == 'l' && snake.hasdAgree <= config.MaxAngle) {
+            snake.hasdAgree += config.dAngle;
+        } else if (key == 'r' && snake.hasdAgree >= -config.MaxAngle) {
+            snake.hasdAgree -= config.dAngle;
+        }
     }
 }

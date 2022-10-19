@@ -16,7 +16,14 @@ public final class config {
     public static final int MaxAngle = 10;
     //每次改变的幅度
     public static final double dAngle = 0.5;
-
+    public static final double dAngle_Key = 5;
+    //键盘控制向左转的案件
+    public static final char turnToLeft = 'a';
+    //键盘控制向右转的案件
+    public static final char turnToRight = 'd';
+    //优先级高于Key_control
+    public static final boolean mouse_control = true;
+    public static final boolean Key_control = true;
 
     public static final Color color_Snake = Color.BLACK;
     public static final Color color_Food = Color.GREEN;

@@ -1,7 +1,8 @@
 import java.util.LinkedList;
 
 public class game {
-    static int n =0 ;
+    static int n = 0;
+
     public static void main(String[] args) throws InterruptedException {
 
         System.out.println(Math.toDegrees(Math.atan2(0, -1)));
@@ -21,26 +22,24 @@ public class game {
         Snake snakes = snakess.getLast();
         snakess.getLast().draw();
         StdDraw.show();
+        if (config.mouse_control)
+            control.mouse_control(snakess);
+        else if(config.Key_control)
+            control.ThreadTest(snakess);
 
-//        control.ThreadTest(snakess);
-        control.mouse_control(snakess);
 //        while (!snakes.isdead(snakess)) {
         while (true) {
-            control.n = 0;
             StdDraw.clear();
             for (Snake s : snakess) {
                 s.draw();
                 s.move();
                 s.eatFood(snakess, foods);
             }
-
             for (Food f : foods) {
                 f.draw();
             }
-
             StdDraw.show();
             StdDraw.pause(config.dT);
-//            System.out.println(control.n);
         }
 
     }
