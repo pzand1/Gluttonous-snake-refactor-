@@ -5,7 +5,6 @@ public class game {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println(Math.toDegrees(Math.atan2(0, -1)));
         LinkedList<Snake> snakess = new LinkedList<>();
         snakess.add(new Snake(0, 0, "???"));
 

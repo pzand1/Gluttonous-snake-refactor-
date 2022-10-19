@@ -43,8 +43,6 @@ public class Snake extends Entity {
         body.addLast(new Entity(b.x + dx, b.y + dy));
         body.removeFirst();
         StdDraw.line(b.x, b.y, b.x + dx * 50, b.y + dy * 50);
-
-        System.out.println(this.hasdAgree);
     }
     protected boolean isdead(LinkedList<Snake> snakes){
         Entity head = body.getLast();
