@@ -1,9 +1,11 @@
+package com.base;
+
 import static java.lang.Math.pow;
 
 public class Entity {
     protected String picture;
-    protected double x;
-    protected double y;
+    public double x;
+    public double y;
     protected int radius = config.radius;
     public Entity(){};
 

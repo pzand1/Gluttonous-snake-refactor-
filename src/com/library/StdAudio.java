@@ -1,6 +1,6 @@
-/*************************************************************************
- *  Compilation:  javac StdAudio.java
- *  Execution:    java StdAudio
+package com.library; /*************************************************************************
+ *  Compilation:  javac Library.StdAudio.java
+ *  Execution:    java Library.StdAudio
  *  
  *  Simple library for reading, writing, and manipulating .wav files.
 
@@ -145,7 +145,7 @@ public final class StdAudio {
             if (file.canRead()) url = file.toURI().toURL();
         }
         catch (MalformedURLException e) { e.printStackTrace(); }
-        // URL url = StdAudio.class.getResource(filename);
+        // URL url = Library.StdAudio.class.getResource(filename);
         if (url == null) throw new RuntimeException("audio " + filename + " not found");
         AudioClip clip = Applet.newAudioClip(url);
         clip.play();
@@ -161,7 +161,7 @@ public final class StdAudio {
             if (file.canRead()) url = file.toURI().toURL();
         }
         catch (MalformedURLException e) { e.printStackTrace(); }
-        // URL url = StdAudio.class.getResource(filename);
+        // URL url = Library.StdAudio.class.getResource(filename);
         if (url == null) throw new RuntimeException("audio " + filename + " not found");
         AudioClip clip = Applet.newAudioClip(url);
         clip.loop();

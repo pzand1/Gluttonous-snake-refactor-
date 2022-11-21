@@ -1,3 +1,7 @@
+package com.base;
+
+import com.library.StdDraw;
+
 import java.util.LinkedList;
 
 public class bigFood extends Food{

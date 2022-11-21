@@ -1,6 +1,6 @@
-/*************************************************************************
- *  Compilation:  javac StdOut.java
- *  Execution:    java StdOut
+package com.library; /*************************************************************************
+ *  Compilation:  javac Library.StdOut.java
+ *  Execution:    java Library.StdOut
  *
  *  Writes data of various types to standard output.
  *

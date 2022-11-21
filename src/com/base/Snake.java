@@ -1,3 +1,7 @@
+package com.base;
+
+import com.library.StdDraw;
+
 import java.util.LinkedList;
 
 public class Snake extends Entity {
@@ -8,6 +12,10 @@ public class Snake extends Entity {
     protected boolean ismove = true;
     protected double speed = config.speed;
     protected double angle = 0;
+
+    public Snake(){
+
+    }
 
     public Snake(double x, double y, String picture) {
         super(x, y);
@@ -42,7 +50,7 @@ public class Snake extends Entity {
         Entity b = body.getLast();
         body.addLast(new Entity(b.x + dx, b.y + dy));
         body.removeFirst();
-        StdDraw.line(b.x, b.y, b.x + dx * 50, b.y + dy * 50);
+        //Library.StdDraw.line(b.x, b.y, b.x + dx * 50, b.y + dy * 50);
     }
     protected boolean isdead(LinkedList<Snake> snakes){
         Entity head = body.getLast();

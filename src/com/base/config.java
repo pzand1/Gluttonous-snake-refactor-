@@ -1,3 +1,5 @@
+package com.base;
+
 import java.awt.*;
 
 public final class config {
