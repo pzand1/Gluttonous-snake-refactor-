@@ -15,13 +15,14 @@ import java.util.Scanner;
 public class EchoClient {
 	public static int TCP_Port = 8000;  //规定TCP连接的端口号为8000,并建立TCP连接
 	public static int UDP_Port = 9999;  //规定TCP连接的端口号为8000,并建立TCP连接
+	public Socket socket = null;
 	/**
 	 * UDP广播建立连接  转换成TCP连接
 	 *
 	 * @return
 	 * @throws IOException
 	 */
-	public Socket broadCast() throws IOException {
+	public void broadCast() throws IOException, InterruptedException {
 		//开始广播端口号
 		Thread broadcastPort = new BroadcastPort();
 		broadcastPort.start();
@@ -32,13 +33,18 @@ public class EchoClient {
 		System.out.println("TCP连接成功");
 		//中断广播
 		broadcastPort.interrupt();
-		return request;
+		socket = request;
 	}
 	//广播线程类
 	private class BroadcastPort extends Thread {
 		@Override
 		public void run(){
 			DatagramSocket socket = null;
+			try {
+				socket = new DatagramSocket();
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
 			String TCP_PortToString = String.valueOf(TCP_Port);
 			DatagramPacket datagramPacket = null;
 
@@ -60,5 +66,33 @@ public class EchoClient {
 				}
 			}
 		}
+	}
+
+	private class Accept extends Thread{
+		@Override
+		public void run() {
+			InputStream inputStream = null;
+			try {
+				inputStream = socket.getInputStream();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			Scanner scan = new Scanner(inputStream);
+			while(scan.hasNext()){
+				System.out.println(scan.next());
+			}
+		}
+	}
+	private void Send(String response) throws IOException {
+		OutputStream outputStream = socket.getOutputStream();
+		PrintWriter writer = new PrintWriter(outputStream);
+		writer.println(response);
+		writer.flush();
+	}
+	public static void main(String[] args) throws IOException, InterruptedException {
+		EchoClient echoClient = new EchoClient();
+		echoClient.broadCast();
+
 	}
 }
