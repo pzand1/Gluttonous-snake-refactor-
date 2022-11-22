@@ -7,7 +7,7 @@ public class Entity {
     public double x;
     public double y;
     protected int radius = config.radius;
-    public Entity(){};
+    public Entity(){}
 
     public Entity(double x, double y) {
         this.x = x;
