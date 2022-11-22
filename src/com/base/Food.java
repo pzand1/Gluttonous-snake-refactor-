@@ -12,7 +12,7 @@ public class Food extends Entity{
         this.y = 100;
     }
 
-    protected void createFood(LinkedList<Snake> snakes){
+    public  void createFood(LinkedList<Snake> snakes){
         Random random = new Random();
         boolean temp = true;
         while(temp){

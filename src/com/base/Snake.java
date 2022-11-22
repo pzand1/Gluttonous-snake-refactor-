@@ -12,9 +12,15 @@ public class Snake extends Entity {
     protected boolean ismove = true;
     protected double speed = config.speed;
     protected double angle = 0;
+    public static int number = 0; // 蛇的编号
+    public String head;           // 蛇头信息
 
     public Snake(){
-
+        head += number;
+        for(int i = 0;i < 10;i++) {
+            this.body.addFirst(new Entity(i, i));
+        }
+        number+=1;
     }
 
     public Snake(double x, double y, String picture) {
@@ -40,7 +46,7 @@ public class Snake extends Entity {
         this.angle = this.angle + this.hasdAgree;
         this.hasdAgree = 0;
     }
-    protected void move(){
+    public void move(){
         if(!ismove){return;}
         setAngle();
         double distance = speed * config.dT;
@@ -68,6 +74,16 @@ public class Snake extends Entity {
         for(Entity e : getBody()){
             StdDraw.setPenColor(config.color_Snake);
             StdDraw.filledCircle(e.x, e.y, this.radius);
+        }
+    }
+    public void draw(String str){
+        String x = "";
+        String y = "";
+        for (int i = 0; i < str.length(); i = i + 6) {
+            x = str.substring(i, i + 3);
+            y = str.substring(i + 3, i + 6);
+            StdDraw.setPenColor(config.color_Snake);
+            StdDraw.filledCircle(Double.parseDouble(x), Double.parseDouble(y), this.radius);
         }
     }
 }
