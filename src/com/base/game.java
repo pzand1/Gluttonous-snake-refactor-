@@ -90,7 +90,7 @@ public class game {
                 s.eatFood(snakess, foods);
             }
             for (Food f : foods) {
-                f.draw();
+                //f.draw();
             }
             StdDraw.show();
             StdDraw.pause(config.dT);

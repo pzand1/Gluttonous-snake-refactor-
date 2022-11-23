@@ -1,10 +1,5 @@
 package com.echo;
 
-import com.base.Entity;
-import com.base.Snake;
-import com.base.config;
-import com.library.StdDraw;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,68 +7,40 @@ import java.io.PrintWriter;
 import java.net.*;
 import java.util.Scanner;
 
+import static com.echo.EchoServe.TCP_Port;
+
 public class EchoClient {
-	public static int TCP_Port = 8000;  //规定TCP连接的端口号为8000,并建立TCP连接
-	public static int UDP_Port = 9999;  //规定TCP连接的端口号为8000,并建立TCP连接
-	public Socket socket = null;
+	public static int UDP_Port = 9999;
+	private Socket serve;
+
 	/**
-	 * UDP广播建立连接  转换成TCP连接
-	 *
-	 * @return
-	 * @throws IOException
+	 * 通过广播的方式接受服务端的ip和端口号
+	 * 建立TCP连接
 	 */
-	public void broadCast() throws IOException, InterruptedException {
-		//开始广播端口号
-		Thread broadcastPort = new BroadcastPort();
-		broadcastPort.start();
-		System.out.println("发送方启动");
+	public void connect() throws IOException {
+		MulticastSocket socket = new MulticastSocket(9999);
+		socket.joinGroup(new InetSocketAddress(InetAddress.getByName("225.0.1.1"),UDP_Port), NetworkInterface.getByInetAddress(InetAddress.getLocalHost()));
 
-		ServerSocket serverSocket = new ServerSocket(TCP_Port);
-		Socket request = serverSocket.accept();
-		System.out.println("TCP连接成功");
-		//中断广播
-		broadcastPort.interrupt();
-		socket = request;
-	}
-	//广播线程类
-	private class BroadcastPort extends Thread {
-		@Override
-		public void run(){
-			DatagramSocket socket = null;
-			try {
-				socket = new DatagramSocket();
-			} catch (SocketException e) {
-				e.printStackTrace();
-			}
-			String TCP_PortToString = String.valueOf(TCP_Port);
-			DatagramPacket datagramPacket = null;
+		byte[] buffer=new byte[1024*64];
+		DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
 
-			try {
-				datagramPacket = new DatagramPacket(TCP_PortToString.getBytes(), TCP_PortToString.getBytes().length,
-						InetAddress.getByName("255.255.255.255"), UDP_Port);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
+		socket.receive(packet);
+		//获取端口号
+		int len=packet.getLength();
+		String rs=new String(buffer,0,len);
 
-			while (true) {
-				try {
-					socket.send(datagramPacket);
-					Thread.sleep(1000);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					break;
-				}
-			}
-		}
+		//建立socket连接
+		serve = new Socket(packet.getAddress(), Integer.parseInt(rs));
+		System.out.println("服务器连接成功");
+		//关闭广播
+		socket.close();
 	}
 
-	private class Accept extends Thread{
-		@Override
-		public void run() {
+	public void accept(){
+		Thread a = new Thread(()->{
 			InputStream inputStream = null;
 			try {
-				inputStream = socket.getInputStream();
+				inputStream = serve.getInputStream();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -82,17 +49,37 @@ public class EchoClient {
 			while(scan.hasNext()){
 				System.out.println(scan.next());
 			}
-		}
+		});
+		a.start();
 	}
+
 	private void Send(String response) throws IOException {
-		OutputStream outputStream = socket.getOutputStream();
+		OutputStream outputStream = serve.getOutputStream();
 		PrintWriter writer = new PrintWriter(outputStream);
 		writer.println(response);
 		writer.flush();
 	}
-	public static void main(String[] args) throws IOException, InterruptedException {
-		EchoClient echoClient = new EchoClient();
-		echoClient.broadCast();
 
+	public static void main(String[] args) throws IOException {
+//		EchoClient echoServer = new EchoClient();
+//		echoServer.connect();
+//		echoServer.accept();
+//		for(int i = 0;i < 10;i++){
+//			echoServer.Send("9999");
+//		}
+		Socket socket =  new Socket("127.0.0.1",TCP_Port);
+		OutputStream outputStream = socket.getOutputStream();
+		PrintWriter writer = new PrintWriter(outputStream);
+		for(int i = 0;i < 10;i++){
+			writer.println("1234");
+			writer.flush();
+		}
+
+
+		Socket socket1 =  new Socket("127.0.0.1",TCP_Port);
+		OutputStream outputStream1 = socket1.getOutputStream();
+		PrintWriter writer1 = new PrintWriter(outputStream1);
+		writer1.println("aaaa");
+		writer1.flush();
 	}
 }

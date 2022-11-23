@@ -70,4 +70,14 @@ public class Snake extends Entity {
             StdDraw.filledCircle(e.x, e.y, this.radius);
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
