@@ -2,19 +2,26 @@ package com.base;
 
 import com.library.StdDraw;
 
+import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Objects;
 
-public class Snake extends Entity {
+public class Snake extends Entity implements Draw , Serializable {
 
     private LinkedList<Entity> body = new LinkedList<>();
+    private String number;
     protected double hasdAgree = 0;
 
     protected boolean ismove = true;
     protected double speed = config.speed;
     protected double angle = 0;
 
-    public Snake(){
 
+    public Snake(String number){
+        this.number = number;
+        for(int i = 0;i < 10;i++) {
+            this.body.addFirst(new Entity(i, i + 1));
+        }
     }
 
     public Snake(double x, double y, String picture) {
@@ -23,6 +30,10 @@ public class Snake extends Entity {
         for(int i = 0;i < 10;i++) {
             this.body.addFirst(new Entity(x, y + 1));
         }
+    }
+
+    public double getAngle() {
+        return angle;
     }
 
     protected void eatFood(LinkedList<Snake> snakes, LinkedList<Food> foods) {
@@ -71,13 +82,38 @@ public class Snake extends Entity {
         }
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        return obj instanceof Snake &&
+//                ((Snake) obj).number.equals(this.number);
+//    }
+//
+
+//    @Override
+//    public int hashCode() {
+//        final int prime = 31;
+//        int result = 1;
+//        result = prime * result + ((this.getBody() == null) ? 0 :
+//                this.getBody().hashCode());
+//        result = result * prime + this.number.hashCode();
+//        return result;
+//    }
+
+
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Snake snake = (Snake) o;
+        return Objects.equals(body, snake.body) && Objects.equals(number, snake.number);
     }
 
     @Override
-    public String toString() {
-        return super.toString();
+    public int hashCode() {
+        return Objects.hash(number);
     }
 }

@@ -2,10 +2,11 @@ package com.base;
 
 import com.library.StdDraw;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Food extends Entity{
+public class Food extends Entity implements Draw, Serializable {
     protected int radius = config.radiusFood;
     public Food() {
         this.x = 100;

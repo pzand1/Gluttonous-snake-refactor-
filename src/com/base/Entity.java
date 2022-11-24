@@ -1,8 +1,10 @@
 package com.base;
 
+import java.io.Serializable;
+
 import static java.lang.Math.pow;
 
-public class Entity {
+public class Entity implements Serializable {
     protected String picture;
     public double x;
     public double y;

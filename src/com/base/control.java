@@ -22,6 +22,7 @@ public class control {
         double now_degree = degree(Math.toDegrees(Math.atan2(Y - head.y, X - head.x)));
         trun_To_SpeDir(snake, Trun(now_degree, degree_snake));
     }
+
     public static void ThreadTest(LinkedList<Snake> snakes) {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -58,6 +59,7 @@ public class control {
         double a = angle % 360;
         return a < 0 ? a + 360 : a;
     }
+
     private static char Trun(double mouse, double snake){
         double sub = snake - mouse;
         if(Math.abs(sub) <= 0.05) return 'x';

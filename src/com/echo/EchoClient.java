@@ -1,22 +1,26 @@
 package com.echo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import com.base.Draw;
+import com.base.Entity;
+
+import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
 import static com.echo.EchoServe.TCP_Port;
 
-public class EchoClient {
+public class EchoClient implements Serializable  {
 	public static int UDP_Port = 9999;
 	private Socket serve;
-
+	private Draw draw;
+	private Accept accept1;
 	/**
 	 * 通过广播的方式接受服务端的ip和端口号
 	 * 建立TCP连接
 	 */
+	public EchoClient() throws IOException {
+		this.connect();
+	}
 	public void connect() throws IOException {
 		MulticastSocket socket = new MulticastSocket(9999);
 		socket.joinGroup(new InetSocketAddress(InetAddress.getByName("225.0.1.1"),UDP_Port), NetworkInterface.getByInetAddress(InetAddress.getLocalHost()));
@@ -36,50 +40,53 @@ public class EchoClient {
 		socket.close();
 	}
 
-	public void accept(){
-		Thread a = new Thread(()->{
+	public class Accept extends Thread{
+		@Override
+		public void run() {
 			InputStream inputStream = null;
+			ObjectInputStream objectInputStream = null;
 			try {
 				inputStream = serve.getInputStream();
-			} catch (IOException e) {
+				objectInputStream = new ObjectInputStream(inputStream);
+				draw = (Draw)objectInputStream.readObject();
+				System.out.println(draw);
+				System.out.println("接收到了");
+			}  catch(IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-
-			Scanner scan = new Scanner(inputStream);
-			while(scan.hasNext()){
-				System.out.println(scan.next());
-			}
-		});
-		a.start();
+		}
 	}
 
-	private void Send(String response) throws IOException {
+	public Draw accept() throws InterruptedException {
+		accept1 = new Accept();
+		accept1.start();
+		accept1.join();
+		return this.draw;
+	}
+
+	/**
+	 * 发送对象
+	 * @param draw
+	 * @throws IOException
+	 */
+	public void Send(Draw draw) throws IOException {
+		OutputStream outputStream = serve.getOutputStream();
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+		objectOutputStream.writeObject(draw);
+		objectOutputStream.flush();
+	}
+
+	/**
+	 * 发送操作
+	 * @param request
+	 * @throws IOException
+	 */
+	public void Send(String request) throws IOException {
 		OutputStream outputStream = serve.getOutputStream();
 		PrintWriter writer = new PrintWriter(outputStream);
-		writer.println(response);
+		writer.write(request);
 		writer.flush();
-	}
-
-	public static void main(String[] args) throws IOException {
-//		EchoClient echoServer = new EchoClient();
-//		echoServer.connect();
-//		echoServer.accept();
-//		for(int i = 0;i < 10;i++){
-//			echoServer.Send("9999");
-//		}
-		Socket socket =  new Socket("127.0.0.1",TCP_Port);
-		OutputStream outputStream = socket.getOutputStream();
-		PrintWriter writer = new PrintWriter(outputStream);
-		for(int i = 0;i < 10;i++){
-			writer.println("1234");
-			writer.flush();
-		}
-
-
-		Socket socket1 =  new Socket("127.0.0.1",TCP_Port);
-		OutputStream outputStream1 = socket1.getOutputStream();
-		PrintWriter writer1 = new PrintWriter(outputStream1);
-		writer1.println("aaaa");
-		writer1.flush();
 	}
 }
