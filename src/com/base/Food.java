@@ -3,7 +3,9 @@ package com.base;
 import com.library.StdDraw;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 public class Food extends Entity implements Draw, Serializable {
@@ -13,27 +15,25 @@ public class Food extends Entity implements Draw, Serializable {
         this.y = 100;
     }
 
-    protected void createFood(LinkedList<Snake> snakes){
+    public void createFood(HashMap<Integer, Snake> snakes){
         Random random = new Random();
         boolean temp = true;
         while(temp){
             temp = false;
             this.x = (random.nextInt() % config.x_Size);
             this.y = (random.nextInt() % config.y_Size);
-            for (Snake snake : snakes) {
-                for (Entity body : snake.getBody()) {
+            for (Map.Entry<Integer,Snake> entry : snakes.entrySet()) {
+                for (Entity body : entry.getValue().getBody()) {
                     if(this.circular(body)){
                         temp = true;
                         break;
                     }
                 }
-
                 if(temp){ break;}
-
             }
         }
     }
-    public void takefood(Snake s, LinkedList<Snake> snakes){
+    public void takefood(Snake s,HashMap<Integer, Snake> snakes){
         s.getBody().addFirst(new Entity(s.getBody().getFirst().x, s.getBody().getFirst().y));
         createFood(snakes);
     }

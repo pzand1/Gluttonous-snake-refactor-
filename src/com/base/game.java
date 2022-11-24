@@ -81,13 +81,17 @@ public class game {
 		Draw list = echoClient.accept();
 		list.draw();
 		StdDraw.show();
+		//类名, HashCode, 操作 , 数值
+		System.out.println(list.getClass() + "," + list.hashCode() + ","
+				+ "move" + "," + ((Snake)list).hasdAgree);
+		echoClient.Send(list.getClass()+ "," + list.hashCode() + ","
+						+ "move" + "," + ((Snake)list).hasdAgree + "\n");
 
-
-
+		Draw draw = echoClient.accept();
+		draw.draw();
+		StdDraw.show();
 
 		//echoClient.Send(snake);
-
-
 //        Snake snakes = snakess.getLast();
 //        snakess.getLast().draw();
 //        StdDraw.show();

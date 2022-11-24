@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class EchoServe  implements Serializable {
+public class EchoServe implements Serializable {
 	public static int TCP_Port = 8000;  //规定TCP连接的端口号为8000,并建立TCP连接
 	public static int UDP_Port = 9999;  //规定TCP连接的端口号为8000,并建立TCP连接
 	private ServerSocket serverSocket;
@@ -17,7 +17,9 @@ public class EchoServe  implements Serializable {
 	private Socket socket;
 	private Draw draw;
 	private Accept accept;
-	private HashMap<Integer,Snake> snakes = new HashMap<>();
+	private HashMap<Integer, Snake> snakes = new HashMap<>();
+	private LinkedList<Food> Foods = new LinkedList<>();
+
 	/**
 	 * UDP广播建立连接  转换成TCP连接
 	 *
@@ -29,20 +31,31 @@ public class EchoServe  implements Serializable {
 		//1.创建线程池来解决一个服务器多个客户端的问题
 		ExecutorService ponds = Executors.newCachedThreadPool();
 		serverSocket = new ServerSocket(TCP_Port);
-		while(true){
-			socket =  this.broadCast();
+
+		while (true) {
+			socket = this.broadCast();
+			for (int i = 0; i < 10; i++) {
+				Food food = new Food();
+				food.createFood(snakes);
+				Foods.add(food);
+			}
 			Snake snake = new Snake(String.valueOf(UserId));
-			snakes.put(snake.hashCode(),snake);
+			snakes.put(snake.hashCode(), snake);
+
+			System.out.println("本来蛇的hash" + snake.hashCode());
+
 			ponds.submit(new Runnable() {
 				@Override
 				public void run() {
+					//把蛇发给客户端后  游戏开始
 					try {
 						Send(snake);
-//						for(Map.Entry<Snake,Integer> entry : snakes.entrySet()){
-//							Send(entry.getKey());
-//						}
-						//Draw draw = Accept();
+						System.out.println("lail");
+						game();
+						System.out.println("jieshul");
 					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
@@ -51,13 +64,27 @@ public class EchoServe  implements Serializable {
 		}
 	}
 
+	public void game() throws InterruptedException, IOException {
+		//游戏基本逻辑
+		while (true) {
+			String request = null;
+			request = Accept();
+			System.out.println("requesr:" + request);
+			pocess(request);
+//			snakes.get(pocess(request)).move();
+//			for(Map.Entry<Integer,Snake> entry : snakes.entrySet()){
+//				Send(entry.getValue());
+//			}
+		}
+	}
 
 	/**
 	 * 广播信号,并建立连接
+	 *
 	 * @return 返回连接的socket
 	 * @throws IOException
 	 */
-	public  Socket broadCast() throws IOException{
+	public Socket broadCast() throws IOException {
 		//开始广播端口号
 		Thread broadcastPort = new BroadcastPort();
 		broadcastPort.start();
@@ -76,7 +103,7 @@ public class EchoServe  implements Serializable {
 	//广播线程类
 	private class BroadcastPort extends Thread {
 		@Override
-		public void run(){
+		public void run() {
 			DatagramSocket socket = null;
 			try {
 				socket = new DatagramSocket();
@@ -108,8 +135,9 @@ public class EchoServe  implements Serializable {
 
 
 	//接受数据类
-	private class Accept extends Thread{
+	private class Accept extends Thread {
 		public String request;
+
 		@Override
 		public void run() {
 			InputStream inputStream = null;
@@ -117,12 +145,13 @@ public class EchoServe  implements Serializable {
 			try {
 				inputStream = socket.getInputStream();
 				Scanner scan = new Scanner(inputStream);
-				request = scan.next();
-			}  catch(IOException e) {
+				request = scan.nextLine();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		public String Get(){
+
+		public String Get() {
 			return request;
 		}
 	}
@@ -156,26 +185,17 @@ public class EchoServe  implements Serializable {
 			Snake snake = snakes.get(Integer.parseInt(arr[1]));
 			if (arr[2].equals("move")) {
 				control.trun_To_SpeDir(snake, 'l', Integer.parseInt(arr[3]));
+				System.out.println(arr[1]);
+				snakes.get(arr[1]).move();
+				//return Integer.parseInt(arr[1]);
 			}
 		}
+
+		//return 0;
 	}
-
-
-
-
-
-
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		EchoServe echoClient = new EchoServe();
 		echoClient.start();
-
-//		Snake snake = new Snake();
-//		for(int i = 0;i < 30;i++){
-//			snake.getBody().add(new Entity(0,0));
-//		}
-//		echoClient.socket = echoClient.broadCast();//记得把serve关掉
-//		echoClient.Send(snake);
-
 	}
 }

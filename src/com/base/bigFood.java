@@ -2,12 +2,13 @@ package com.base;
 
 import com.library.StdDraw;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class bigFood extends Food{
     protected int radius = config.radiusFood * 3;
     @Override
-    public void takefood(Snake s, LinkedList<Snake> snakes) {
+    public void takefood(Snake s, HashMap<Integer, Snake> snakes) {
         s.getBody().addFirst(new Entity(s.getBody().getFirst().x, s.getBody().getFirst().y));
         s.getBody().addFirst(new Entity(s.getBody().getFirst().x, s.getBody().getFirst().y));
         s.getBody().addFirst(new Entity(s.getBody().getFirst().x, s.getBody().getFirst().y));
@@ -17,7 +18,6 @@ public class bigFood extends Food{
 
     @Override
     public void draw() {
-
             StdDraw.setPenColor(config.color_Food);
             StdDraw.filledCircle(this.x, this.y, this.radius);
     }

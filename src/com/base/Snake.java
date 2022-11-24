@@ -3,6 +3,7 @@ package com.base;
 import com.library.StdDraw;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class Snake extends Entity implements Draw , Serializable {
 
     private LinkedList<Entity> body = new LinkedList<>();
     private String number;
-    protected double hasdAgree = 0;
+    public double hasdAgree = 0;
 
     protected boolean ismove = true;
     protected double speed = config.speed;
@@ -36,7 +37,7 @@ public class Snake extends Entity implements Draw , Serializable {
         return angle;
     }
 
-    protected void eatFood(LinkedList<Snake> snakes, LinkedList<Food> foods) {
+    protected void eatFood(HashMap<Integer, Snake> snakes, LinkedList<Food> foods) {
         for (Food food : foods) {
             if(body.getLast().circular(food)){
                 food.takefood(this, snakes);
@@ -51,7 +52,7 @@ public class Snake extends Entity implements Draw , Serializable {
         this.angle = this.angle + this.hasdAgree;
         this.hasdAgree = 0;
     }
-    protected void move(){
+    public void move(){
         if(!ismove){return;}
         setAngle();
         double distance = speed * config.dT;
