@@ -152,10 +152,11 @@ public class EchoServe  implements Serializable {
 	 */
 	private void pocess(String request){
 		String[] arr = request.split(",");
-		Snake snake = snakes.get(Integer.parseInt(arr[0]));
-		control.trun_To_SpeDir(snake, '');
-		if(arr[2].equals("move")){
-
+		if(arr[0].equals("class Snake")) {
+			Snake snake = snakes.get(Integer.parseInt(arr[1]));
+			if (arr[2].equals("move")) {
+				control.trun_To_SpeDir(snake, 'l', Integer.parseInt(arr[3]));
+			}
 		}
 	}
 
