@@ -1,9 +1,6 @@
 package com.echo;
 
-import com.base.Draw;
-import com.base.Entity;
-import com.base.Snake;
-import com.base.config;
+import com.base.*;
 import com.library.StdDraw;
 
 import java.io.*;
@@ -150,12 +147,13 @@ public class EchoServe  implements Serializable {
 	}
 
 	/**
-	 * HashCode , 类名 , 操作 , 数值
+	 * 类名, HashCode, 操作 , 数值
 	 * @param request
 	 */
 	private void pocess(String request){
 		String[] arr = request.split(",");
 		Snake snake = snakes.get(Integer.parseInt(arr[0]));
+		control.trun_To_SpeDir(snake, '');
 		if(arr[2].equals("move")){
 
 		}

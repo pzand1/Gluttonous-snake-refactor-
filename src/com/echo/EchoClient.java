@@ -1,13 +1,9 @@
 package com.echo;
 
 import com.base.Draw;
-import com.base.Entity;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
-
-import static com.echo.EchoServe.TCP_Port;
 
 public class EchoClient implements Serializable  {
 	public static int UDP_Port = 9999;
@@ -64,18 +60,6 @@ public class EchoClient implements Serializable  {
 		accept1.start();
 		accept1.join();
 		return this.draw;
-	}
-
-	/**
-	 * 发送对象
-	 * @param draw
-	 * @throws IOException
-	 */
-	public void Send(Draw draw) throws IOException {
-		OutputStream outputStream = serve.getOutputStream();
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-		objectOutputStream.writeObject(draw);
-		objectOutputStream.flush();
 	}
 
 	/**
