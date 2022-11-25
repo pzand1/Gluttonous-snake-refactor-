@@ -4,12 +4,13 @@ import com.base.Draw;
 
 import java.io.*;
 import java.net.*;
+import java.util.LinkedList;
 
 public class EchoClient implements Serializable  {
 	public static int UDP_Port = 9999;
 	private Socket serve;
-	private Draw draw;
-	private Accept accept1;
+//	private LinkedList<Draw> draw;
+//	private Accept accept1;
 	/**
 	 * 通过广播的方式接受服务端的ip和端口号
 	 * 建立TCP连接
@@ -37,29 +38,32 @@ public class EchoClient implements Serializable  {
 	}
 
 	public class Accept extends Thread{
+		private LinkedList<Draw> draws;
 		@Override
 		public void run() {
-			InputStream inputStream = null;
-			ObjectInputStream objectInputStream = null;
+			InputStream inputStream;
+			ObjectInputStream objectInputStream;
 			try {
 				inputStream = serve.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
-				draw = (Draw) objectInputStream.readObject();
-				System.out.println(draw);
-				System.out.println("接收到了");
+				draws = (LinkedList<Draw>) objectInputStream.readObject();
+//				System.out.println("接收到了");
 			}  catch(IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
+		public LinkedList<Draw> accept(){
+			return draws;
+		}
 	}
 
-	public Draw accept() throws InterruptedException {
-		accept1 = new Accept();
-		accept1.start();
-		accept1.join();
-		return this.draw;
+	public LinkedList<Draw> accept() throws InterruptedException {
+		Accept accept = new Accept();
+		accept.start();
+		accept.join();
+		return accept.accept();
 	}
 
 	/**

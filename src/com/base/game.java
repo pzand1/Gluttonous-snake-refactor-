@@ -49,15 +49,15 @@ package com.base;//import java.util.LinkedList;
 
 
 import com.echo.EchoClient;
+import com.echo.EchoServe;
 import com.library.StdDraw;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class game {
-	static int n = 0;
-
+	public static ReentrantLock r1 = new ReentrantLock();
 	public static void main(String[] args) throws InterruptedException, IOException {
 
 //        LinkedList<Snake> snakess = new LinkedList<>();
@@ -77,21 +77,30 @@ public class game {
 		StdDraw.setYscale(-config.y_Size, config.y_Size);
 
 
-		EchoClient echoClient = new EchoClient();
-		Draw snake = echoClient.accept();
+		EchoClient client = new EchoClient();
+		Snake snake = (Snake) client.accept().getFirst();
 		snake.draw();
 		StdDraw.show();
+		control.mouse_control(snake);
 		//类名, HashCode, 操作 , 数值
-		System.out.println(snake.getClass() + "," + snake.hashCode() + ","
-				+ "move" + "," + ((Snake)snake).hasdAgree);
-		echoClient.Send(snake.getClass()+ "," + snake.hashCode() + ","
-						+ "move" + "," + ((Snake)snake).hasdAgree + "\n");
 
 		while(true) {
-			Draw draw = echoClient.accept();
-			draw.draw();
+			StdDraw.clear();
+			LinkedList<Draw> drawList = client.accept();
+			for(Draw draws : drawList){
+				draws.draw();
+			}
 			StdDraw.show();
-			Thread.sleep(10);
+
+			r1.lock();
+			System.out.println(snake.hasdAgree);
+
+			client.Send(snake.getClass()+ "," + snake.hashCode() + ","
+					+ "move" + "," + snake.hasdAgree + "\n");
+			snake.move();
+
+			r1.unlock();
+			Thread.sleep(8);
 		}
 
 		//echoClient.Send(snake);

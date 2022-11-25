@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Snake extends Entity implements Draw , Serializable {
 
     private LinkedList<Entity> body = new LinkedList<>();
-    private String number;
+    private int number;
     public double hasdAgree = 0;
 
     protected boolean ismove = true;
@@ -18,7 +18,7 @@ public class Snake extends Entity implements Draw , Serializable {
     protected double angle = 0;
 
 
-    public Snake(String number){
+    public Snake(int number){
         this.number = number;
         for(int i = 0;i < 10;i++) {
             this.body.addFirst(new Entity(i, i + 1));
@@ -34,10 +34,10 @@ public class Snake extends Entity implements Draw , Serializable {
     }
 
     public double getAngle() {
-        return angle;
+        return hasdAgree;
     }
 
-    protected void eatFood(HashMap<Integer, Snake> snakes, LinkedList<Food> foods) {
+    public void eatFood(HashMap<Integer, Snake> snakes, LinkedList<Food> foods) {
         for (Food food : foods) {
             if(body.getLast().circular(food)){
                 food.takeFood(this, snakes);
@@ -48,13 +48,13 @@ public class Snake extends Entity implements Draw , Serializable {
     public LinkedList<Entity> getBody(){
         return body;
     }
-    private void setAngle(){
+    private void resetAngle(){
         this.angle = this.angle + this.hasdAgree;
         this.hasdAgree = 0;
     }
     public void move(){
         if(!ismove){return;}
-        setAngle();
+        resetAngle();
         double distance = speed * config.dT;
         double agree = Math.toRadians(this.angle);
         double dx = distance * Math.cos(agree);
@@ -82,28 +82,6 @@ public class Snake extends Entity implements Draw , Serializable {
             StdDraw.filledCircle(e.x, e.y, this.radius);
         }
     }
-
-    public String getNumber() {
-        return number;
-    }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        return obj instanceof Snake &&
-//                ((Snake) obj).number.equals(this.number);
-//    }
-//
-
-//    @Override
-//    public int hashCode() {
-//        final int prime = 31;
-//        int result = 1;
-//        result = prime * result + ((this.getBody() == null) ? 0 :
-//                this.getBody().hashCode());
-//        result = result * prime + this.number.hashCode();
-//        return result;
-//    }
-
 
     @Override
     public boolean equals(Object o) {

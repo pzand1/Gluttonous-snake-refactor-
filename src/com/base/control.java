@@ -37,6 +37,8 @@ public class control {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
+                game.r1.lock();
+
                 if (StdDraw.hasNextKeyTyped()) {
                     char key = StdDraw.nextKeyTyped();
                     if(key == config.turnToLeft) {
@@ -45,6 +47,8 @@ public class control {
                         trun_To_SpeDir(snake, 'r', config.dAngle_Key);
                     }
                 }
+
+                game.r1.unlock();
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0, 1);//0代表一开始就执行没有延迟
@@ -55,9 +59,13 @@ public class control {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
+                game.r1.lock();
+
                 double mouseX = StdDraw.mouseX();
                 double mouseY = StdDraw.mouseY();
                 trun_To_SpeCoor(snake, mouseX, mouseY);
+
+                game.r1.unlock();
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0, 1);//0代表一开始就执行没有延迟
