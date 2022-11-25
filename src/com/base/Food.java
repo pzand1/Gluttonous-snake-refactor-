@@ -3,16 +3,12 @@ package com.base;
 import com.library.StdDraw;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Food extends Entity implements Draw, Serializable {
     protected int radius = config.radiusFood;
-    public Food() {
-        this.x = 100;
-        this.y = 100;
+    public Food(HashMap<Integer, Snake> snakes) {
+        this.createFood(snakes);
     }
 
     public void createFood(HashMap<Integer, Snake> snakes){
@@ -33,7 +29,7 @@ public class Food extends Entity implements Draw, Serializable {
             }
         }
     }
-    public void takefood(Snake s,HashMap<Integer, Snake> snakes){
+    public void takeFood(Snake s,HashMap<Integer, Snake> snakes){
         s.getBody().addFirst(new Entity(s.getBody().getFirst().x, s.getBody().getFirst().y));
         createFood(snakes);
     }

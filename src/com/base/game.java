@@ -78,18 +78,21 @@ public class game {
 
 
 		EchoClient echoClient = new EchoClient();
-		Draw list = echoClient.accept();
-		list.draw();
+		Draw snake = echoClient.accept();
+		snake.draw();
 		StdDraw.show();
 		//类名, HashCode, 操作 , 数值
-		System.out.println(list.getClass() + "," + list.hashCode() + ","
-				+ "move" + "," + ((Snake)list).hasdAgree);
-		echoClient.Send(list.getClass()+ "," + list.hashCode() + ","
-						+ "move" + "," + ((Snake)list).hasdAgree + "\n");
+		System.out.println(snake.getClass() + "," + snake.hashCode() + ","
+				+ "move" + "," + ((Snake)snake).hasdAgree);
+		echoClient.Send(snake.getClass()+ "," + snake.hashCode() + ","
+						+ "move" + "," + ((Snake)snake).hasdAgree + "\n");
 
-		Draw draw = echoClient.accept();
-		draw.draw();
-		StdDraw.show();
+		while(true) {
+			Draw draw = echoClient.accept();
+			draw.draw();
+			StdDraw.show();
+			Thread.sleep(10);
+		}
 
 		//echoClient.Send(snake);
 //        Snake snakes = snakess.getLast();

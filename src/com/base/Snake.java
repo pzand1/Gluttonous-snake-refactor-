@@ -40,7 +40,7 @@ public class Snake extends Entity implements Draw , Serializable {
     protected void eatFood(HashMap<Integer, Snake> snakes, LinkedList<Food> foods) {
         for (Food food : foods) {
             if(body.getLast().circular(food)){
-                food.takefood(this, snakes);
+                food.takeFood(this, snakes);
             }
         }
     }
