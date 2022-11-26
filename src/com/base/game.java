@@ -82,10 +82,13 @@ public class game {
 		snake.draw();
 		StdDraw.show();
 		control.mouse_control(snake);
+//		client.Send(snake.getClass()+ "," + snake.hashCode() + ","
+//				+ "move" + "," + snake.hasdAgree + "\n");
 		//类名, HashCode, 操作 , 数值
 
 		while(true) {
 			StdDraw.clear();
+			snake.draw();
 			LinkedList<Draw> drawList = client.accept();
 			for(Draw draws : drawList){
 				draws.draw();
@@ -93,38 +96,15 @@ public class game {
 			StdDraw.show();
 
 			r1.lock();
-			System.out.println(snake.hasdAgree);
 
 			client.Send(snake.getClass()+ "," + snake.hashCode() + ","
 					+ "move" + "," + snake.hasdAgree + "\n");
+			System.out.println(snake.hasdAgree);
 			snake.move();
 
 			r1.unlock();
-			Thread.sleep(8);
-		}
 
-		//echoClient.Send(snake);
-//        Snake snakes = snakess.getLast();
-//        snakess.getLast().draw();
-//        StdDraw.show();
-//        if (config.mouse_control)
-//            control.mouse_control(snakess);
-//        else if(config.Key_control)
-//            control.ThreadTest(snakess);
-//
-////        while (!snakes.isdead(snakess)) {
-//        while (true) {
-//            StdDraw.clear();
-//            for (Snake s : snakess) {
-//                s.draw();
-//                s.move();
-//                s.eatFood(snakess, foods);
-//            }
-//            for (Food f : foods) {
-//                //f.draw();
-//            }
-//            StdDraw.show();
-//            StdDraw.pause(config.dT);
-//        }
+			Thread.sleep(50);
+		}
 	}
 }

@@ -4,6 +4,7 @@ import com.base.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class EchoServe implements Serializable {
 	public static int TCP_Port = 8000;  //规定TCP连接的端口号为8000,并建立TCP连接
@@ -18,6 +19,8 @@ public class EchoServe implements Serializable {
 	private HashMap<Integer, Snake> snakes = new HashMap<>();
 
 	private LinkedList<Food> foods = new LinkedList<>();
+
+	public static ReentrantLock r1 = new ReentrantLock();
 
 	public void init() throws IOException {
 		this.startBroadcast();
@@ -101,18 +104,16 @@ public class EchoServe implements Serializable {
 			list.add(snake);
 			send(socket, list);
 
-//			snakes.put(Objects.hash(UserId++), snake);
-//			System.out.println("Objects.hash(UserId++)" + Objects.hash(1));
+			snakes.put(Objects.hash(UserId++), snake);
 		}
 		//初始化服务器的对象
-		for(int i = 1;i <= 5;i++) {
-			foods.add(new Food(snakes));
-			foods.add(new bigFood(snakes));
-		}
+//		for(int i = 1;i <= 5;i++) {
+//			foods.add(new Food(snakes));
+//			foods.add(new bigFood(snakes));
+//		}
 
 		//跑
 		while(true){
-			long start = System.nanoTime();
 			//accept
 			for(Socket socket : sockets){
 				acceptSockeyMessage(socket);
@@ -120,7 +121,6 @@ public class EchoServe implements Serializable {
 			//handle
 			for(Map.Entry<Integer, Snake> entity : snakes.entrySet()){
 				Snake snake = entity.getValue();
-				snake.move();
 				snake.eatFood(snakes, foods);
 			}
 			//send
@@ -128,35 +128,38 @@ public class EchoServe implements Serializable {
 			for(Map.Entry<Integer, Snake> entity : snakes.entrySet()){
 				data.add(entity.getValue());
 			}
-			for(Food food : foods){
-				data.add(food);
-			}
+//			for(Food food : foods){
+//				data.add(food);
+//			}
 			for (Socket socket : sockets){
 				send(socket, data);
 			}
 			//pause
-			long end = System.nanoTime();
-			Thread.sleep(18);
+			Thread.sleep(5);
 		}
 	}
 
-	public void acceptSockeyMessage(Socket socket) throws InterruptedException {
+	public void acceptSockeyMessage(Socket socket) {
 		SocketAccept socketAccept = socketAccepts.get(socket);
-		String message = socketAccept.Get();
-		this.parseMessage(message);
-	}
 
-	private void send(Socket socket, Object drawList) throws IOException {
-		OutputStream outputStream = socket.getOutputStream();
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-		objectOutputStream.writeObject(drawList);
-		objectOutputStream.flush();
+		socketAccept.lockAccept.lock();
+
+		Queue<String> messages = socketAccept.Get();
+		for(String message : messages) {
+			this.parseMessage(message);
+		}
+		while(!messages.isEmpty()) {
+			messages.remove();
+		}
+
+		socketAccept.lockAccept.unlock();
 	}
 
 	private class SocketAccept extends Thread {
-		public String request;
-		private final Socket socket;
 
+		public ReentrantLock lockAccept = new ReentrantLock();
+		public Queue<String> request = new LinkedList<>();
+		private final Socket socket;
 		public SocketAccept(Socket socket) {
 			this.socket = socket;
 		}
@@ -167,31 +170,46 @@ public class EchoServe implements Serializable {
 				InputStream inputStream = socket.getInputStream();
 				Scanner scan = new Scanner(inputStream);
 				while(true) {
-					request = scan.nextLine();
+					String aNewMes = scan.nextLine();
+					lockAccept.lock();
+
+					request.add(aNewMes);
+
+					lockAccept.unlock();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		public String Get() {
+
+		public Queue<String> Get() {
 			return this.request;
 		}
+	}
+	private void send(Socket socket, Object drawList) throws IOException {
+		OutputStream outputStream = socket.getOutputStream();
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+		objectOutputStream.writeObject(drawList);
+		objectOutputStream.flush();
 	}
 
 	/**
 	 * 类名, HashCode, 操作 , 数值
 	 */
 	private void parseMessage(String request){
+
 		if(request == null){
 			return;
 		}
 		String[] arr = request.split(",");
+		System.out.println(arr[3]);
 		if(arr[0].equals("class com.base.Snake")) {
 			Snake snake = snakes.get(Integer.parseInt(arr[1]));
 			if (arr[2].equals("move")) {
-				control.trun_To_SpeDir(snake, 'l', Double.parseDouble(arr[3]));
+//				control.trun_To_SpeDir(snake, 'l', Double.parseDouble(arr[3]));
+				snake.hasdAgree = Double.parseDouble(arr[3]);
 				snake.move();
-				snake.eatFood(snakes, foods);
+//				snake.eatFood(snakes, foods);
 
 //				System.out.println(arr[1]);
 //				return Integer.parseInt(arr[1]);

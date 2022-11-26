@@ -13,6 +13,8 @@ public class Snake extends Entity implements Draw , Serializable {
     private int number;
     public double hasdAgree = 0;
 
+//    public double dtime = 0;
+
     protected boolean ismove = true;
     protected double speed = config.speed;
     protected double angle = 0;
@@ -56,12 +58,15 @@ public class Snake extends Entity implements Draw , Serializable {
         if(!ismove){return;}
         resetAngle();
         double distance = speed * config.dT;
+//        double distance = speed * dtime;
         double agree = Math.toRadians(this.angle);
         double dx = distance * Math.cos(agree);
         double dy = distance * Math.sin(agree);
         Entity b = body.getLast();
         body.addLast(new Entity(b.x + dx, b.y + dy));
         body.removeFirst();
+
+//        dtime = 0;
         //Library.StdDraw.line(b.x, b.y, b.x + dx * 50, b.y + dy * 50);
     }
     protected boolean isdead(LinkedList<Snake> snakes){

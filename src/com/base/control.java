@@ -56,6 +56,7 @@ public class control {
 
     public static void mouse_control(Snake snake) {
         Timer timer = new Timer();
+
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -69,6 +70,7 @@ public class control {
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0, 1);//0代表一开始就执行没有延迟
+
     }
 
     //把度数归回0~360度
