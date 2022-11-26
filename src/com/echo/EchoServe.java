@@ -30,9 +30,11 @@ public class EchoServe implements Serializable {
 	//开始接受TCP连接
 	public void startTCPConnect() throws IOException {
 		serverSocket = new ServerSocket(TCP_Port);
-		Socket socket = serverSocket.accept();
-		for(int i = 1;i <= 1;i++){
+
+		for(int i = 1;i <= 2;i++){
+			Socket socket = serverSocket.accept();
 			sockets.add(socket);
+
 			SocketAccept socketAccept = new SocketAccept(socket);
 			socketAccept.start();
 			socketAccepts.put(socket, socketAccept);
@@ -211,8 +213,6 @@ public class EchoServe implements Serializable {
 				snake.move();
 				snake.eatFood(snakes, foods);
 
-//				System.out.println(arr[1]);
-//				return Integer.parseInt(arr[1]);
 			}
 		}
 	}
