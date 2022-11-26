@@ -104,7 +104,7 @@ public class game {
 
 			r1.unlock();
 
-			Thread.sleep(50);
+			Thread.sleep(20);
 		}
 	}
 }

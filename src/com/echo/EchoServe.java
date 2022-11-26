@@ -135,7 +135,7 @@ public class EchoServe implements Serializable {
 				send(socket, data);
 			}
 			//pause
-			Thread.sleep(5);
+			Thread.sleep(10);
 		}
 	}
 
