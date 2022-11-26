@@ -106,11 +106,11 @@ public class EchoServe implements Serializable {
 
 			snakes.put(Objects.hash(UserId++), snake);
 		}
-		//初始化服务器的对象
-//		for(int i = 1;i <= 5;i++) {
-//			foods.add(new Food(snakes));
-//			foods.add(new bigFood(snakes));
-//		}
+//		初始化服务器的对象
+		for(int i = 1;i <= 5;i++) {
+			foods.add(new Food(snakes));
+			foods.add(new bigFood(snakes));
+		}
 
 		//跑
 		while(true){
@@ -119,23 +119,23 @@ public class EchoServe implements Serializable {
 				acceptSockeyMessage(socket);
 			}
 			//handle
-			for(Map.Entry<Integer, Snake> entity : snakes.entrySet()){
-				Snake snake = entity.getValue();
-				snake.eatFood(snakes, foods);
-			}
+//			for(Map.Entry<Integer, Snake> entity : snakes.entrySet()){
+//				Snake snake = entity.getValue();
+//				snake.eatFood(snakes, foods);
+//			}
 			//send
 			LinkedList<Draw> data = new LinkedList<>();
 			for(Map.Entry<Integer, Snake> entity : snakes.entrySet()){
 				data.add(entity.getValue());
 			}
-//			for(Food food : foods){
-//				data.add(food);
-//			}
+			for(Food food : foods){
+				data.add(food);
+			}
 			for (Socket socket : sockets){
 				send(socket, data);
 			}
 			//pause
-			Thread.sleep(10);
+			Thread.sleep(20);
 		}
 	}
 
@@ -209,7 +209,7 @@ public class EchoServe implements Serializable {
 //				control.trun_To_SpeDir(snake, 'l', Double.parseDouble(arr[3]));
 				snake.hasdAgree = Double.parseDouble(arr[3]);
 				snake.move();
-//				snake.eatFood(snakes, foods);
+				snake.eatFood(snakes, foods);
 
 //				System.out.println(arr[1]);
 //				return Integer.parseInt(arr[1]);

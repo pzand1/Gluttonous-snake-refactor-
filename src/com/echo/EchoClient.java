@@ -47,7 +47,6 @@ public class EchoClient implements Serializable  {
 				inputStream = serve.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				draws = (LinkedList<Draw>) objectInputStream.readObject();
-//				System.out.println("接收到了");
 			}  catch(IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
